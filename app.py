@@ -1,4 +1,4 @@
-from flask import Flask, send_file
+from flask import Flask, send_file, render_template
 from io import BytesIO
 import pandas as pd
 import numpy as np
@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-app = Flask(__name__)
+app = Flask('Historic_Co2_Emission')
 
 # Read the CSV file
 file_path = r'C:\Users\r_mat\OneDrive\Desktop\Classwork\Project_03\Resources\annual-co-emissions-by-region.csv'
@@ -51,6 +51,10 @@ def save_and_return_plot(data, title):
 
     return img_bytes.getvalue()
 
+@app.route('/')
+def home():
+    return "Welcome to the Historic Co2 Emission API!"
+
 @app.route('/top_countries_plot')
 def top_countries_plot():
     # Group by country and sum the 'A_Co2_emissions' for the top 10 countries
@@ -73,5 +77,5 @@ def co2_emissions_plot():
                      download_name='co2_emissions_plot.png',
                      mimetype='image/png')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if 'Historic_Co2_Emission' == '__main__':
+    app.run()
