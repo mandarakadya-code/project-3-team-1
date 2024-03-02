@@ -77,5 +77,5 @@ def co2_emissions_plot():
                      download_name='co2_emissions_plot.png',
                      mimetype='image/png')
 
-if 'Historic_Co2_Emission' == '__main__':
+if __name__  == '__main__':
     app.run()
