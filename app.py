@@ -1,4 +1,4 @@
-from flask import Flask, send_file, render_template
+from flask import Flask, send_file
 from io import BytesIO
 import pandas as pd
 import numpy as np
@@ -53,7 +53,14 @@ def save_and_return_plot(data, title):
 
 @app.route('/')
 def home():
-    return "Welcome to the Historic Co2 Emission API!"
+    return """
+    <h1>Welcome to the Historic Co2 Emission API!</h1>
+    <p>Explore the following plots:</p>
+    <ul>
+        <li><a href="/top_countries_plot">Top 10 Countries Plot</a></li>
+        <li><a href="/co2_emissions_plot">Co2 Emissions Plot</a></li>
+    </ul>
+    """
 
 @app.route('/top_countries_plot')
 def top_countries_plot():
