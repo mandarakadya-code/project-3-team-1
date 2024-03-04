@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-app = Flask('Historic_Co2_Emission')
+app = Flask(__name__)
 
 # Read the CSV file
 file_path = r'C:\Users\r_mat\OneDrive\Desktop\Classwork\Project_03\Resources\annual-co-emissions-by-region.csv'
