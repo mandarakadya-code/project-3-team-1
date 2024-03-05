@@ -12,7 +12,7 @@ Co2 = pd.read_csv(file_path)
 print(Co2.info())
 
 # Drop the 'Code' column
-Co2.drop('Code', axis=1, inplace=True)
+# Co2.drop('Code', axis=1, inplace=True)
 
 # Rename the 'annual_co2_emissions' column to 'A_Co2_emissions'
 Co2.rename(columns={'annual_co2_emissions': 'A_Co2_emissions'}, inplace=True)
@@ -46,15 +46,19 @@ Period_2 = df[P2_Y1 & P2_Y2]
 print(Period_1.head())
 print(Period_2.head())
 
-# Group by country and sum the 'A_Co2_emissions' for the top 65 countries
-top_countries = Period_2.groupby('Country')['A_Co2_emissions'].sum().sort_values(ascending=False)[:65]
+# Group by country and sum the 'A_Co2_emissions' for the top 10 countries
+top_countries = Period_2.groupby('Code')['A_Co2_emissions'].sum().sort_values(ascending=False)[1:11]
+
+# Display the top emitting countries with their respective CO2 emissions
+print(top_countries)
 
 # Plot a bar chart for the top 10 emitting countries from 1960 to 1980
 sns.set_style('darkgrid')
-plt.figure(figsize=(10, 6))  # Optional: Adjust the figure size
-chart = top_countries[1:10].plot(kind='bar')
-plt.title('Top 10 Countries in emitting Co2 from 1960 to 1980', fontweight='bold')
+plt.figure(figsize=(15, 8))  # Optional: Adjust the figure size
+chart = top_countries.plot(kind='bar')
+plt.title('Top Countries in emitting Co2 from 1960 to 1980', fontweight='bold')
 plt.ylabel('Co2 Emissions')
+plt.xlabel('Country')
 
 # Create a folder for saving the output if it doesn't exist
 output_folder = 'output_folder'
@@ -87,4 +91,3 @@ plt.savefig(output_file_path, bbox_inches='tight')
 
 # Display the plot
 plt.show()
-
