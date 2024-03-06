@@ -1,6 +1,6 @@
 // This function is called when the UI is initialized
 // The chart that is loaded during initialization is a bar chart of the total emissions by year 
-function init(){
+function totalEmissions(){
     d3.json("http://127.0.0.1:5000/api/v1.0/annualEmissions").then(function(data) {
         let emission1970 = 0;
         let emission1980 = 0;
@@ -37,15 +37,25 @@ function init(){
             y: yValue,
             text: textValue,
             textposition: 'auto',
-            type: "bar"
-            // transforms: [{
-            //   type: 'sort',
-            //   target: 'x',
-            //   order: 'ascending'
-            // }],
-            // orientation: 'h'
+            type: "bar",
+            marker: {
+                color: 'orange'
+              }
           }];
-          Plotly.newPlot('total-emissions', dataPlot);
+          var layout = {
+            title: "Total Emissions in the last 50 years",
+            xaxis: {
+                title: {
+                  text: "Year"
+                }
+            },
+            yaxis: {
+                title: {
+                  text: "Emissions per year"
+                }
+            }
+        }
+          Plotly.newPlot('total-emissions', dataPlot, layout);
 });
 }
 
@@ -56,10 +66,21 @@ function updatePlotly() {
     let dropdownMenu = d3.select("#selPeriod");
     let periodOfEmission = dropdownMenu.property("value");
     let emissionDataList = [];
-    
+    let title;
+    let xlabel;
+    let ylabel;
+    let titleBar;
+    let xlabelBar;
+    let ylabelBar;
     
     console.log(periodOfEmission);
     if(periodOfEmission == "currentEmission" || periodOfEmission == "historyEmission"){
+        document.getElementById("total-emissions").style.display = 'none';
+        document.getElementById("map-button").style.display = 'block';
+        document.getElementById("chart-button").style.display = 'block';
+        document.getElementById("map").style.display = 'none';
+        document.getElementById("line").style.display = 'block';
+        document.getElementById("barPeriod").style.display = 'block';
         d3.json("http://127.0.0.1:5000/api/v1.0/annualEmissions").then(function(data) {
         
             let countryArray = data.map(function(country){
@@ -82,6 +103,12 @@ function updatePlotly() {
                     filterDataYear.push(data.filter(function(emData){
                         return emData.country == ctr && emData.year == 2022 && (/^[A-Z]{3}$/).test(emData.code)
                     })[0]);
+                    title = "Top Countries with CO2 Emissions over 12 years (2010 to 2022)";
+                    xlabel = "Year";
+                    ylabel = "Emissions per year";
+                    titleBar = "Top Countries with CO2 Emissions in 2022";
+                    xlabelBar = "Countries";
+                    ylabelBar = "Total Emissions in 2022";
                 }else if(periodOfEmission == "historyEmission"){
                     filterData = data.filter(function(emData){
                         return emData.country == ctr && emData.year >= 1960 && emData.year <= 1980
@@ -89,6 +116,12 @@ function updatePlotly() {
                     filterDataYear.push(data.filter(function(emData){
                         return emData.country == ctr && emData.year == 1979 && (/^[A-Z]{3}$/).test(emData.code)
                     })[0]);
+                    title = "Top Countries with CO2 Emissions over 20 years (1960 to 1980)";
+                    xlabel = "Year";
+                    ylabel = "Emissions per year";
+                    titleBar = "Top Countries with CO2 Emissions in 1979";
+                    xlabelBar = "Countries";
+                    ylabelBar = "Total Emissions in 1979";
                 }
                 
                 let sortFilterData = filterData.sort((a,b) => b.year - a.year)
@@ -108,7 +141,8 @@ function updatePlotly() {
         let slicedData = sortedByEmissionYear.slice(0, 10);
         
         
-        var lineData = [];    
+        var lineData = [];  
+        
         for(country of slicedData.map(object => object.country)){
             let dataForLine = emissionDataList.filter(obj => {return obj.country == country})[0];
             
@@ -119,16 +153,42 @@ function updatePlotly() {
                 name: country
             }
             lineData.push(trace);
+            var layout = {
+                title: title,
+                xaxis: {
+                    title: {
+                      text: xlabel
+                    }
+                },
+                yaxis: {
+                    title: {
+                      text: ylabel
+                    }
+                }
+            }
         }
-        Plotly.newPlot("line",lineData);
+        Plotly.newPlot("line",lineData, layout);
 
         var dataPlot = [{
             x: slicedData.map(object => object.country),
             y: slicedData.map(object => object.emission),
             type: "bar"
           }];
-          Plotly.newPlot('barPeriod', dataPlot);
-          
+          var layoutBar = {
+            title: titleBar,
+            xaxis: {
+                title: {
+                  text: xlabelBar
+                }
+            },
+            yaxis: {
+                title: {
+                  text: ylabelBar
+                }
+            }
+        }
+          Plotly.newPlot('barPeriod', dataPlot, layoutBar);
+        
           console.log(filterDataYear);
           let slicedDataMap;
           if(periodOfEmission == "currentEmission"){
@@ -163,12 +223,13 @@ function updatePlotly() {
             colorbar: {
                 autotic: false,
                 // tickprefix: '$',
-                title: 'CO2 emissions'
+                title: 'CO2 emissions',
+                len: 0.5
             }
       }];
 
       var layout = {
-          title: 'CO2 Emissions by Countries',
+          title: ylabelBar+" by Countries",
           width: 1000,
           height: 800,
           geo:{
@@ -183,6 +244,12 @@ function updatePlotly() {
     
     });
     } else if(periodOfEmission == "emissionPerPerson"){
+        document.getElementById("total-emissions").style.display = 'none';
+        document.getElementById("map-button").style.display = 'block';
+        document.getElementById("chart-button").style.display = 'block';
+        document.getElementById("map").style.display = 'none';
+        document.getElementById("line").style.display = 'block';
+        document.getElementById("barPeriod").style.display = 'block';
         d3.json("http://127.0.0.1:5000/api/v1.0/emissionsPerPerson").then(function(data) {
             let countryArray = data.map(function(country){
                 return country.country;
@@ -214,9 +281,15 @@ function updatePlotly() {
             }
             let sortedByEmissionYear = filterDataYear.sort((a, b) => b.emission - a.emission);
 
-        let slicedData = sortedByEmissionYear.slice(0, 10);
+        let slicedData = sortedByEmissionYear.slice(0, 15);
         
         var lineData = [];    
+        // title = "Top Countries with CO2 Emissions over 12 years (2010 to 2022)";
+        //             xlabel = "Year";
+        //             ylabel = "Emissions per year";
+        //             titleBar = "Top Countries with CO2 Emissions in 2022";
+        //             xlabelBar = "Countries";
+        //             ylabelBar = "Total Emissions in 2022";
         for(country of slicedData.map(object => object.country)){
             let dataForLine = emissionDataList.filter(obj => {return obj.country == country})[0];
             
@@ -228,14 +301,41 @@ function updatePlotly() {
             }
             lineData.push(trace);
         }
-        Plotly.newPlot("line",lineData);
+        var layout = {
+            title: "Top Countries with CO2 Emissions per person <br> between 2010 and 2022",
+            xaxis: {
+                title: {
+                  text: "Year"
+                }
+            },
+            yaxis: {
+                title: {
+                  text: "Emissions per person per year"
+                }
+            }
+        }
+    
+        Plotly.newPlot("line",lineData, layout);
 
         var dataPlot = [{
             x: slicedData.map(object => object.country),
             y: slicedData.map(object => object.emission),
             type: "bar"
           }];
-          Plotly.newPlot('barPeriod', dataPlot);
+          var layoutBar = {
+            title: "Top Countries with CO2 Emissions per person in 2022",
+            xaxis: {
+                title: {
+                  text: "Countries"
+                }
+            },
+            yaxis: {
+                title: {
+                  text: "Total Emissions per person in 2022"
+                }
+            }
+        }
+          Plotly.newPlot('barPeriod', dataPlot, layoutBar);
 
           let slicedDataMap = sortedByEmissionYear.slice(0, 212);
           console.log(slicedDataMap.map(object => object.country));
@@ -265,12 +365,13 @@ function updatePlotly() {
             colorbar: {
                 autotic: false,
                 // tickprefix: '$',
-                title: 'CO2 emissions'
+                title: 'CO2 emissions',
+                len: 0.5
             }
       }];
 
       var layout = {
-          title: 'CO2 Emissions by Countries',
+          title: "Total Emissions per person in 2022 by Countries",
           width: 1000,
           height: 800,
           geo:{
@@ -285,7 +386,36 @@ function updatePlotly() {
         });
 
         
+    } else if(periodOfEmission == "totalEmission"){
+        document.getElementById("total-emissions").style.display = 'block';
+        document.getElementById("map-button").style.display = 'none';
+        document.getElementById("chart-button").style.display = 'none';
+        document.getElementById("map").style.display = 'none';
+        document.getElementById("line").style.display = 'none';
+        document.getElementById("barPeriod").style.display = 'none';
+        totalEmissions();
     }
+
+    d3.select("#chart-button").on("click", function() {  
+        document.getElementById("map").style.display = 'none';
+        document.getElementById("line").style.display = 'block';
+        document.getElementById("barPeriod").style.display = 'block';
+    });
+    d3.select("#map-button").on("click", function() {  
+        document.getElementById("map").style.display = 'block';
+        document.getElementById("line").style.display = 'none';
+        document.getElementById("barPeriod").style.display = 'none';
+    });
+}
+
+
+
+function init(){
+    // d3.selectAll("#map-button").attr("visibile", "hidden");
+    // d3.selectAll("#chart-button").attr("visibile", "hidden");
+    document.getElementById("map-button").style.display = 'none';
+    document.getElementById("chart-button").style.display = 'none';
+    // d3.selectAll(".classOfCircles").attr("visibility", "hidden");
 }
 
 init();
