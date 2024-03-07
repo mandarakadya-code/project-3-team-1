@@ -4,12 +4,11 @@ Overview of project
 As carbon dioxide emissions is a main cause of global climate change and there has been a great increase of CO₂ emissions over the past 30 years, our team decided to study the CO₂ emissions and identify the main countries contributing to the CO₂ emissions both historically from 1960-1980 and over recent years (2010-2022). The consequences of CO₂ emissions have become more visible and severe over recent years, such as heat waves and extreme temperature rises, glaciers melting and the lowest amount of ice ever recorded in the North Pole (Kurzgesagt – In a Nutshell, 2020). 
 Before discussing about solutions to reduce global CO₂ emissions and transition to cleaner energy, we need to first study the causes CO₂ emissions and contributing countries. While developed countries are developed countries were a main contributor in CO₂ emissions during the industrialization and economic development in the second half of the 20th Century. The current impact on climate change is an accumulation of historical and current CO₂ pollution. 
 Our team decided to focus on three main research questions:
-•	Which countries are responsible for the current CO₂ emissions (2010-2022)?
-•	Which countries are historically responsible for the CO₂ emissions?
-•	Which countries have the highest CO₂ emissions/person?
-• The richest countries have access to the resources, highly educated workforce and technology to develop low cost, low carbon solutions and spread them around the world.
-•If we don’t want developing countries to follow the high-carbon pathway of developed countries and become as fossil fuel dependent as the developed countries, then clean energy technologies must be affordable and accessible.
 
+
+- Which countries are responsible for the current CO₂ emissions (2010-2022)?
+- Which countries are historically responsible for the CO₂ emissions?
+- Which countries have the highest CO₂ emissions/person?
 
 Instructions on how to use and interact with the project
 ---------------------------------------------------------
