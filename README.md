@@ -14,7 +14,9 @@ Our team decided to focus on three main research questions:
 Run the emission_reduction.py file to access API endpoints. 
 Run python -m http.server to launch index.html file. 
 Choose an option in the drop down menu to view the charts and maps.
-Ethical considerations 
+
+## Ethical considerations 
+
 
 ## References 
 
